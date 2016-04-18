@@ -166,8 +166,38 @@ for index in range(100000):
 # Create random query vector
 query = numpy.random.randn(dimension)
 
-# Get nearest neighbours
+# Get nearest 10 neighbours
 N = engine.neighbours(query)
+for n in N:
+    print n[1]
+    
+    
+
+engine.vector_filters = [NearestFilter(20)]
+# Get nearest 20 neighbours
+N = engine.neighbours(query)
+print type(N),len(N)
+for n in N:
+    print n[1]
+```
+
+
+To use redis:
+```
+#install redis in the system
+#sudo apt-get install redis-server   ##http://blog.fens.me/linux-redis-install/
+#install redis for python
+#sudo pip install redis
+#
+
+from redis import Redis
+from nearpy.storage import RedisStorage
+
+redis_storage = RedisStorage(Redis(host='localhost', port=6379, db=0))
+#engine = Engine(dimension, lshashes=[myHash1], vector_filters=[myFilter1, myFilter2], storage=redis_storage)
+
+
+engine = Engine(dimension, lshashes=[rbp],vector_filters = [NearestFilter(10)],storage=redis_storage)
 ```
 
 ===========
