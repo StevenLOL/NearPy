@@ -200,6 +200,11 @@ redis_storage = RedisStorage(Redis(host='localhost', port=6379, db=0))
 engine = Engine(dimension, lshashes=[rbp],vector_filters = [NearestFilter(10)],storage=redis_storage)
 ```
 
+#FAQ
+##Can support SSDB ?
+Yes, just change the IP and Port to your SSDB server.
+
+
 ===========
 
 
