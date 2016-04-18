@@ -202,7 +202,7 @@ engine = Engine(dimension, lshashes=[rbp],vector_filters = [NearestFilter(10)],s
 
 #FAQ
 ##Can support SSDB ?
-Yes, just change the IP and Port to your SSDB server.
+??? TBC
 
 
 ===========
