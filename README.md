@@ -1,4 +1,41 @@
-# NearPy
+# NearPy-SSDB
+
+This project forked from [NearPy](https://github.com/pixelogik/NearPy) with support of SSDB. No magic here just chage few commands in redis to ssdb. 
+
+
+```
+from ssdb import SSDB
+import nearpy
+print nearpy.__file__
+from redis import Redis
+#import pyssdb
+from ssdb import SSDB
+import numpy
+from nearpy.hashes import RandomBinaryProjections
+from nearpy.hashes import PCABinaryProjections
+from nearpy.hashes import RandomBinaryProjectionTree
+from nearpy.filters import NearestFilter, UniqueFilter
+from nearpy.distances import EuclideanDistance
+from nearpy.distances import CosineDistance
+from nearpy.storage import MemoryStorage, RedisStorage, SsdbStorage
+from nearpy import Engine
+dimension = 200
+ssdb_storage = SsdbStorage( SSDB(host='localhost', port=8889) )    
+
+# Create a random binary hash with 10 bits
+rbp = RandomBinaryProjections('rbp', 10)
+
+engine = Engine(dimension, lshashes=[rbp],vector_filters = [NearestFilter(10)],storage=ssdb_storage)
+
+for index in range(100000):
+    v = numpy.random.randn(dimension)
+    engine.store_vector(v, 'test-data_%d' % index)
+```
+
+
+
+
+
 
 NearPy is a Python framework for fast (approximated) nearest neighbour search in high dimensional vector spaces using different locality-sensitive hashing methods.
 
@@ -199,10 +236,6 @@ redis_storage = RedisStorage(Redis(host='localhost', port=6379, db=0))
 
 engine = Engine(dimension, lshashes=[rbp],vector_filters = [NearestFilter(10)],storage=redis_storage)
 ```
-
-#FAQ
-##Can support SSDB ?
-??? TBC
 
 
 ===========
