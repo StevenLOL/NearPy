@@ -1,6 +1,6 @@
 # NearPy-SSDB
 
-This project forked from [NearPy](https://github.com/pixelogik/NearPy) with support of SSDB. No magic here just chage few commands in redis to ssdb. 
+This project forked from [NearPy](https://github.com/pixelogik/NearPy) with support of SSDB. No magic here just change few commands in redis to ssdb. 
 
 
 ```
