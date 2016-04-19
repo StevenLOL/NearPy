@@ -42,15 +42,23 @@ from nearpy.storage.storage import Storage
 class SsdbStorage(Storage):
     """ Storage using redis. """
 
-    def __init__(self, ssdb_object):
+    def __init__(self, ssdb_object,appid='nearpy'):
         """ Uses specified redis object for storage. """
         self.ssdb_object = ssdb_object
+        self.appid=appid
 
-    def store_vector(self, hash_name, bucket_key, v, data):
+    def store_vector(self, hash_name, bucket_key, v, data,appid='nearpy'):
         """
         Stores vector and JSON-serializable data in bucket with specified key.
         """
-        redis_key = 'nearpy_%s_%s' % (hash_name, bucket_key)
+        '''
+        if self.appid!=appid and appid!='nearpy':
+            if self.appid!='nearpy':
+                import warnings
+                warnings.warn('Appid changed from %s to %s'%(self.appid,appid))
+            self.appid=appid
+        '''
+        redis_key = '%s_%s_%s' % (self.appid,hash_name, bucket_key)
 
         val_dict = {}
 
@@ -90,7 +98,7 @@ class SsdbStorage(Storage):
         """
         Returns bucket content as list of tuples (vector, data).
         """
-        redis_key = 'nearpy_%s_%s' % (hash_name, bucket_key)
+        redis_key = '%s_%s_%s' % (self.appid,hash_name, bucket_key)
         items = self.ssdb_object.qslice(redis_key, 0, -1)
         results = []
         for item_str in items:
@@ -134,7 +142,7 @@ class SsdbStorage(Storage):
         """
         Removes all buckets and their content for specified hash.
         """
-        bucket_keys = self.ssdb_object.keys(pattern='nearpy_%s_*' % hash_name)
+        bucket_keys = self.ssdb_object.keys(pattern='%s_%s_*' % (self.appid,hash_name))
         for bucket_key in bucket_keys:
             self.ssdb_object.delete(bucket_key)
 
@@ -142,9 +150,12 @@ class SsdbStorage(Storage):
         """
         Removes all buckets from all hashes and their content.
         """
-        bucket_keys = self.ssdb_object.keys(pattern='nearpy_*')
+        bucket_keys=self.ssdb_object.qlist('%s'%(self.appid),'',999999999)
+        #    for q in ql:
+                #ssdb.qclear(q)
+        #bucket_keys = self.ssdb_object.keys(pattern='%s_*'%(self.appid))
         for bucket_key in bucket_keys:
-            self.ssdb_object.delete(bucket_key)
+            self.ssdb_object.qclear(bucket_key)
 
     def store_hash_configuration(self, lshash):
         """
