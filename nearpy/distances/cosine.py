@@ -37,4 +37,4 @@ class CosineDistance(Distance):
         if scipy.sparse.issparse(x):
             x = x.toarray().ravel()
             y = y.toarray().ravel()
-        return 1.0 - numpy.dot(x, y)
+        return 1.0 - numpy.dot(x, y)/numpy.linalg.norm(x)/numpy.linalg.norm(y)
